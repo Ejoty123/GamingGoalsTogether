@@ -5,73 +5,103 @@
 </head>
 <body>
 
-    <button onclick="toggleBoolean('Bundles/BundleName1/BundleItem1/checked')">Toggle Bundle Item 1</button>
-    <!-- Make it a checklist style button -->
     <input type="checkbox" id="bundleItem1Checkbox" onclick="toggleBoolean('Bundles/BundleName1/BundleItem1/checked')">
     <label for="bundleItem1Checkbox">Bundle Item 1</label>
 
-
     <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
-        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyCEMfZ7FzjoIwDNfTrVvZe06gIELzLcDHA",
-          authDomain: "gaming-goals-together.firebaseapp.com",
-          projectId: "gaming-goals-together",
-          storageBucket: "gaming-goals-together.firebasestorage.app",
-          messagingSenderId: "908648884613",
-          appId: "1:908648884613:web:aed1120f6b096ab741fcec",
-          measurementId: "G-PE8EK74TX6"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-      
-        // Initialize Realtime Database and get a reference to the service
-        const database = getDatabase(app);
-      
-        // Example function to update data in the database
-        window.toggleBoolean = function(path) {
-          const dbRef = ref(database, path);
-      
-          get(dbRef)
-            .then((snapshot) => {
-              if (snapshot.exists()) {
-                const currentValue = snapshot.val();
-                const newValue = !currentValue;
-      
-                set(dbRef, newValue)
-                  .then(() => {
-                    console.log("Boolean toggled successfully!");
-                  })
-                  .catch((error) => {
-                    console.error("Error toggling boolean:", error);
-                  });
-              } else {
-                // If the value doesn't exist, default to setting it to true
-                set(dbRef, true)
-                  .then(() => {
-                    console.log("Value did not exist, setting to true");
-                  })
-                  .catch((error) => {
-                    console.error("Error setting initial value:", error);
-                  });
-              }
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyCEMfZ7FzjoIwDNfTrVvZe06gIELzLcDHA",
+        authDomain: "gaming-goals-together.firebaseapp.com",
+        projectId: "gaming-goals-together",
+        storageBucket: "gaming-goals-together.firebasestorage.app",
+        messagingSenderId: "908648884613",
+        appId: "1:908648884613:web:aed1120f6b096ab741fcec",
+        measurementId: "G-PE8EK74TX6"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Initialize Realtime Database and get a reference to the service
+    const database = getDatabase(app);
+
+    // Get Checkbox by ID
+    const checkbox = document.getElementById('bundleItem1Checkbox');
+
+    // Example function to update data in the database
+    window.toggleBoolean = function(path) {
+    const dbRef = ref(database, path);
+
+    get(dbRef)
+        .then((snapshot) => {
+        if (snapshot.exists()) {
+            const currentValue = snapshot.val();
+            const newValue = !currentValue;
+
+            set(dbRef, newValue)
+            .then(() => {
+                console.log("Boolean toggled successfully!");
             })
             .catch((error) => {
-              console.error("Error getting current value:", error);
+                console.error("Error toggling boolean:", error);
             });
-        };
-      </script>
+        } else {
+            // If the value doesn't exist, default to setting it to true
+            set(dbRef, true)
+            .then(() => {
+                console.log("Value did not exist, setting to true");
+            })
+            .catch((error) => {
+                console.error("Error setting initial value:", error);
+            });
+        }
+        })
+        .catch((error) => {
+        console.error("Error getting current value:", error);
+        });
+    };
+    
+    function updateCheckboxState(path) {
+        const dbRef = ref(database, path);
+        get(dbRef)
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                const value = snapshot.val();
+                checkbox.checked = value; // Set checkbox state based on database value
+            } else {
+                checkbox.checked = false; // Default to unchecked if value doesn't exist
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+    }
+
+    // Call initially to set the right state
+    updateCheckboxState('Bundles/BundleName1/BundleItem1/checked');
+
+    // Listen for changes in the database
+    const checkboxRef = ref(database, 'Bundles/BundleName1/BundleItem1/checked');
+    onValue(checkboxRef, (snapshot) => {
+        if (snapshot.exists()) {
+            const value = snapshot.val();
+            checkbox.checked = value;
+        } else {
+            checkbox.checked = false;
+        }
+    });
+    </script>
 
 
 </body>
