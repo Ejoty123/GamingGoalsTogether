@@ -4,7 +4,7 @@
 	<title>Gaming Goals Together</title>
 </head>
 <body>
-    <input type="password" id="api-key" placeholder="Enter API key">
+
     <input type="checkbox" id="bundleItem1Checkbox" onclick="toggleBoolean('Bundles/BundleName1/BundleItem1/checked')">
     <label for="bundleItem1Checkbox">Pretend this is a pretty website and this isnt a lame checkbox but watchs</label>
 
@@ -19,9 +19,8 @@
 
     // Your web app's Firebase configuration
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const apiKeyInput = document.getElementById('api-key');
     const firebaseConfig = {
-        apiKey: "",
+        apiKey: "AIzaSyCEMfZ7FzjoIwDNfTrVvZe06gIELzLcDHA",
         authDomain: "gaming-goals-together.firebaseapp.com",
         projectId: "gaming-goals-together",
         storageBucket: "gaming-goals-together.firebasestorage.app",
@@ -29,10 +28,6 @@
         appId: "1:908648884613:web:aed1120f6b096ab741fcec",
         measurementId: "G-PE8EK74TX6"
     };
-
-    apiKeyInput.addEventListener('input', () => {
-    firebaseConfig.apiKey = apiKeyInput.value;
-    });
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
@@ -108,6 +103,9 @@
     });
     </script>
 
+
+</body>
+</html>
 
 </body>
 </html>
